@@ -1,7 +1,7 @@
 ---
-title: "上下文工程：AI Agent 背后的关键技术"
+title: "生成式 AI (2)：上下文工程"
 description: "Context Engineering 不是 Prompt Engineering 改名，而是 AI Agent 时代管理 LLM 输入的系统性方法"
-pubDatetime: 2026-06-07T08:00:00.000Z
+pubDatetime: 2026-06-07T12:00:00.000Z
 featured: true
 tags:
   - AI

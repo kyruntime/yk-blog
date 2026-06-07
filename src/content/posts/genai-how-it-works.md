@@ -1,7 +1,7 @@
 ---
-title: "一堂课搞懂生成式 AI 原理"
+title: "生成式 AI (1)：一堂课搞懂原理"
 description: "Token 接龙、概率采样、Chat Template、多模态、AI 幻觉 — 李宏毅 2025 课程精华"
-pubDatetime: 2026-06-07T12:00:00.000Z
+pubDatetime: 2026-06-07T08:00:00.000Z
 featured: true
 tags:
   - AI
