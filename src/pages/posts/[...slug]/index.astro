@@ -133,7 +133,7 @@ const ogImage = ogImageUrl
     </div>
 
     {headings.filter(h => h.depth <= 3).length > 0 && (
-      <aside class="toc-sidebar fixed top-24 hidden lg:block" style="left: max(1rem, calc((100vw - 768px) / 2 - 15rem)); width: 13rem;">
+      <aside class="toc-sidebar fixed top-24 hidden lg:block overflow-y-auto" style="left: max(1rem, calc((100vw - 768px) / 2 - 15rem)); width: 13rem; max-height: calc(100vh - 7rem);">
         <nav class="text-sm">
           <h2 class="text-muted-foreground mb-3 text-xs font-semibold uppercase tracking-wide">目录</h2>
           <ul class="space-y-2 border-l border-border pl-3">
