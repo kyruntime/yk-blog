@@ -6,7 +6,7 @@ export default defineAstroPaperConfig({
     title: "YK Blog",
     description: "技术学习笔记与思考",
     author: "YK",
-    profile: "https://github.com/yukang",
+    profile: "https://github.com/kyruntime",
     ogImage: "default-og.jpg",
     lang: "zh-CN",
     timezone: "Asia/Shanghai",
@@ -26,7 +26,7 @@ export default defineAstroPaperConfig({
     search: "pagefind",
   },
   socials: [
-    { name: "github", url: "https://github.com/yukang" },
+    { name: "github", url: "https://github.com/kyruntime" },
   ],
   shareLinks: [],
 });
