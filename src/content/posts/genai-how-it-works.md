@@ -332,6 +332,109 @@ Java 开发者可以这么类比：LLM 是 `@Stateless` 的无状态服务，**�
 
 ---
 
+## 8. 动手验证：Colab 实操
+
+不信？自己跑一遍就彻底明白了。用 Google Colab + HuggingFace Transformers，5 分钟验证上面所有概念。
+
+### 环境准备
+
+```python
+# 安装 + 登录 HuggingFace
+!pip install transformers -q
+from huggingface_hub import login
+login(token="你的HF_TOKEN")
+```
+
+### 下载模型
+
+```python
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+model_id = "meta-llama/Llama-3.2-3B-Instruct"  # 或 "google/gemma-3-4b-it"
+tokenizer = AutoTokenizer.from_pretrained(model_id)
+model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto")
+```
+
+### 看 Vocabulary
+
+```python
+print(tokenizer.vocab_size)  # 128000 个 Token
+
+# 编号 → 文字
+tokenizer.decode([0])       # "!"
+tokenizer.decode([6151])    # "hi"
+
+# 文字 → 编号
+tokenizer.encode("大家好", add_special_tokens=False)  # [109429, 53901]
+```
+
+### 手动接龙（核心！）
+
+```python
+import torch
+
+prompt = "1+1="
+ids = tokenizer.encode(prompt, return_tensors="pt").to(model.device)
+output = model(ids)
+
+# 取最后一个位置的 logits → 转概率
+logits = output.logits[0, -1, :]
+probs = torch.softmax(logits, dim=0)
+
+# 概率最高的 5 个 Token
+top5 = torch.topk(probs, 5)
+for prob, idx in zip(top5.values, top5.indices):
+    print(f"{tokenizer.decode([idx]):>10} → {prob:.2%}")
+# 输出：  2 → 65.7%,  3 → 12.1%, ...
+```
+
+### Top-K 采样 vs 贪心
+
+```python
+# 贪心（每次选概率最高）→ 输出固定
+output = model.generate(ids, max_new_tokens=20, do_sample=False)
+
+# Top-K 采样（前3名掷骰子）→ 每次不同
+output = model.generate(ids, max_new_tokens=20, do_sample=True, top_k=3)
+
+print(tokenizer.decode(output[0]))
+```
+
+### 加 Chat Template 让模型正常回答
+
+```python
+messages = [
+    {"role": "system", "content": "你的名字是 Llama，用中文回答"},
+    {"role": "user", "content": "你是谁？"},
+]
+
+# apply_chat_template 帮你加模板 + encode
+ids = tokenizer.apply_chat_template(messages, return_tensors="pt").to(model.device)
+output = model.generate(ids, max_new_tokens=50)
+print(tokenizer.decode(output[0], skip_special_tokens=True))
+# → "我是 Llama，一个大型语言模型..."
+```
+
+### 一行代码搞定（Pipeline）
+
+```python
+from transformers import pipeline
+
+pipe = pipeline("text-generation", model=model_id, device_map="auto")
+result = pipe(messages, max_new_tokens=100)
+print(result[0]["generated_text"][-1]["content"])
+```
+
+**验证清单：**
+- [ ] Token ≠ 字：同一个 "GOOD"，句首和句中编号不同
+- [ ] 概率分布：改 Prompt 前缀（"在二进制中"），2 的概率骤降
+- [ ] Chat Template：不加模板 → 模型乱接；加了 → 正常对话
+- [ ] 幻觉：问它不知道的事，它还是会编（只是接龙概率高的词）
+
+> Colab 原始链接：[课程范例代码](https://colab.research.google.com/drive/1EjiX46muxSMy0avtHPXiulVUhmu37Kyi)
+
+---
+
 ## 参考
 
 - 李宏毅 2025 生成式 AI 导论（一堂课版）：[YouTube](https://www.youtube.com/watch?v=TigfpYPJk1s)
