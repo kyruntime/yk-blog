@@ -54,11 +54,13 @@ Tokenizer 把文本切成模型词表里的编号。**一个字可能被切成�
 
 **采样策略决定"创造力"：**
 
-| 参数 | 效果 |
-|------|------|
-| Temperature = 0 | 永远取概率最高的 Token，输出稳定、重复 |
-| Temperature 高 | 低概率 Token 也有机会被选中，输出多样、可能跑偏 |
-| Top-p | 只从累积概率前 p% 的 Token 里采样，折中方案 |
+| 参数 | 做了什么 | 典型值 | 使用场景 |
+|------|----------|--------|----------|
+| **Temperature** | 缩放 logits 再 softmax。越低分布越尖锐（趋向贪心），越高越平坦（更随机） | 0~2，默认 0.7~1.0 | **最常调的旋钮**：写代码/做数学 → 0；写文案/头脑风暴 → 1.2+ |
+| **Top-K** | 只保留概率最高的 K 个 Token，其余直接归零后重新归一化 | 40~100 | DashScope 支持，OpenAI API 不直接暴露 |
+| **Top-P (nucleus)** | 按概率从大到小累加，直到累积概率 ≥ P，只从这些 Token 里采样 | 0.9~0.95 | OpenAI 默认方案，和 Temperature 配合使用 |
+
+三者关系：Temperature 先"拉平/压尖"分布，Top-K / Top-P 再"砍掉尾巴"。实际 API 调用通常只调 **Temperature + Top-P**（OpenAI 风格）或 **Temperature + Top-K**（DashScope 风格），不必三个同时动。
 
 > **收：** 没有"思考过程"藏在里面。你问它任何问题，底层都是同一个循环：算概率 → 抽一个 → 拼接 → 再算。
 
@@ -388,17 +390,25 @@ for prob, idx in zip(top5.values, top5.indices):
 # 输出：  2 → 65.7%,  3 → 12.1%, ...
 ```
 
-### Top-K 采样 vs 贪心
+### Top-K 采样 vs 贪心 vs Temperature
 
 ```python
-# 贪心（每次选概率最高）→ 输出固定
+# 贪心（Temperature=0，每次选概率最高）→ 输出固定
 output = model.generate(ids, max_new_tokens=20, do_sample=False)
 
 # Top-K 采样（前3名掷骰子）→ 每次不同
 output = model.generate(ids, max_new_tokens=20, do_sample=True, top_k=3)
 
+# Temperature 调高 → 更有创意/更跑偏
+output = model.generate(ids, max_new_tokens=20, do_sample=True, temperature=1.5, top_k=50)
+
+# Temperature 调低 → 接近贪心但不完全确定
+output = model.generate(ids, max_new_tokens=20, do_sample=True, temperature=0.2, top_k=50)
+
 print(tokenizer.decode(output[0]))
 ```
+
+> **动手试：** 同一个 prompt 跑 3 次，`temperature=0.2` 几乎一样，`temperature=1.5` 每次都不同。这就是为什么 API 有时给你"稳定回答"有时"天马行空"。
 
 ### 加 Chat Template 让模型正常回答
 
