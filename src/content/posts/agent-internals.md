@@ -1,7 +1,7 @@
 ---
 title: "从零理解 AI Agent 底层机制"
 description: "用 25 个文件手写一个完整 Agent：ReAct Loop、Function Calling、MCP 协议、会话管理"
-pubDatetime: 2026-06-07T00:00:00.000Z
+pubDatetime: 2026-06-07T04:00:00.000Z
 featured: true
 tags:
   - AI
