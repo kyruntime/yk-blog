@@ -4,8 +4,7 @@ description: "Context Engineering 不是 Prompt Engineering 改名，而是 AI A
 pubDatetime: 2026-06-07T12:00:00.000Z
 featured: true
 tags:
-  - AI
-  - LLM
+  - 李宏毅课程
   - Context Engineering
   - AI Agent
 ---

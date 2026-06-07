@@ -4,9 +4,8 @@ description: "基础语法、数据结构、装饰器、生成器、async/await�
 pubDatetime: 2026-06-07T00:00:00.000Z
 featured: true
 tags:
-  - python
-  - java
-  - 语言特性
+  - Python
+  - 实战
 ---
 
 本篇用代码对比讲清六个核心差异。

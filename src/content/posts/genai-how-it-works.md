@@ -4,9 +4,8 @@ description: "Token 接龙、概率采样、Chat Template、多模态、AI 幻�
 pubDatetime: 2026-06-07T08:00:00.000Z
 featured: true
 tags:
-  - AI
-  - LLM
-  - 生成式AI
+  - 李宏毅课程
+  - LLM原理
 ---
 
 > 整理自李宏毅 2025「生成式 AI 导论」课程。目标读者：写过业务代码、但没碰过 LLM 底层的 Java 开发者。

@@ -4,10 +4,8 @@ description: "Pydantic、FastAPI、数据库操作、配置管理 — 用 Python
 pubDatetime: 2026-06-07T00:00:00.000Z
 featured: false
 tags:
-  - python
-  - java
-  - FastAPI
-  - 后端开发
+  - Python
+  - 实战
 ---
 
 系列第二篇。第一篇讲了基础语法差异，这篇聚焦**框架与开发实践**。代码来自 PayReach 项目实战。

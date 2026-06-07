@@ -4,10 +4,8 @@ description: "用 25 个文件手写一个完整 Agent：ReAct Loop、Function C
 pubDatetime: 2026-06-07T04:00:00.000Z
 featured: true
 tags:
-  - AI
-  - Agent
-  - LLM
-  - Java
+  - AI Agent
+  - 实战
 ---
 
 > 参考实现：[agent-lab](https://github.com/your-repo/agent-lab) — 25 个 Java 文件，无框架依赖。

@@ -4,10 +4,8 @@ description: "AI Agent、生态总览、代码分层、Uvicorn/Gunicorn 部署 �
 pubDatetime: 2026-06-07T00:00:00.000Z
 featured: false
 tags:
-  - python
-  - java
-  - 部署
-  - AI
+  - Python
+  - 实战
 ---
 
 系列第三篇。前两篇覆盖了语法、FastAPI、数据库；本篇聚焦 **AI Agent、生态选型、分层架构、部署与工程文化**。
