@@ -114,24 +114,41 @@ test('登录成功跳转首页', async ({ page }) => {
 
 ## 网络拦截
 
+`page.route()` 是**提前注册拦截规则**——在打开页面之前设好"路障"，页面发出请求时会被劫持。这不是在等待请求，而是预设陷阱。
+
+**为什么需要：** 你想测试"列表为空时页面显示什么"，但数据库里有真实数据删不掉。Mock 让你在不改后端的情况下，控制前端看到的数据。
+
 ```typescript
-// Mock API 返回
-await page.route('**/api/users', async route => {
-  await route.fulfill({
-    status: 200,
-    body: JSON.stringify([{ id: 1, name: 'Mock User' }]),
-  })
+// 场景 1：测试空数据状态
+await page.route('**/api/exhibitions', route => {
+  route.fulfill({ body: JSON.stringify({ items: [], total: 0 }) })
+})
+await page.goto('/exhibitions')
+await expect(page.getByText('暂无展会')).toBeVisible()
+
+// 场景 2：测试服务端报错时前端的错误提示
+await page.route('**/api/companies', route => {
+  route.fulfill({ status: 500, body: 'Internal Server Error' })
 })
 
-// 拦截并修改请求
+// 场景 3：测试接口很慢时的 loading 状态
+await page.route('**/api/accounts', async route => {
+  await new Promise(r => setTimeout(r, 3000))
+  route.fulfill({ body: JSON.stringify([]) })
+})
+
+// 拦截并修改请求头
 await page.route('**/api/**', async route => {
   const headers = { ...route.request().headers(), 'x-test': 'true' }
   await route.continue({ headers })
 })
 
-// 录制 HAR 文件
+// 录制 HAR 文件（首次录制真实请求，后续从文件回放）
 await page.routeFromHAR('tests/data/api.har', { update: true })
 ```
+
+> `page.route()` = 事先设置拦截规则（伪造返回）  
+> `page.waitForResponse()` = 等待真实请求完成（不拦截，只观察）
 
 ## Trace Viewer：调试利器
 
