@@ -1,7 +1,7 @@
 ---
 title: "Java 转 Python（二）：框架实践"
 description: "Pydantic、FastAPI、数据库操作、配置管理 — 用 Python 写后端的核心工具链"
-pubDatetime: 2026-06-07T00:00:00.000Z
+pubDatetime: 2026-06-07T01:00:00.000Z
 featured: false
 tags:
   - Python

@@ -1,7 +1,7 @@
 ---
 title: "Java 转 Python（三）：生态与部署"
 description: "AI Agent、生态总览、代码分层、Uvicorn/Gunicorn 部署 — Python 工程化实践"
-pubDatetime: 2026-06-07T00:00:00.000Z
+pubDatetime: 2026-06-07T02:00:00.000Z
 featured: false
 tags:
   - Python

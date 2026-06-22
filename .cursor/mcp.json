@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "sidechat-1": {
+      "command": "node",
+      "args": [
+        "/Users/yukang/.cursor/sidechat-server/index.mjs",
+        "--workspace",
+        "/Users/yukang/Documents/project/person/blog"
+      ],
+      "env": {
+        "SIDECHAT_SESSION": "1"
+      },
+      "disabled": false
+    }
+  }
+}
