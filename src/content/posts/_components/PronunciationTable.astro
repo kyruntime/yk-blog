@@ -17,7 +17,7 @@ const categories = Array.from(new Set(terms.map(term => term.category)));
         data-pronunciation-search
         class="border-border bg-background text-foreground focus-visible:outline-accent w-full rounded border px-3 py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dashed"
         type="search"
-        placeholder="搜索单词、中文含义、中文读法或常见误读"
+        placeholder="搜索单词、中文含义、中文读法、纯中文读法或常见误读"
       />
     </label>
 
@@ -49,12 +49,13 @@ const categories = Array.from(new Set(terms.map(term => term.category)));
 
   <div class="border-border overflow-hidden rounded border">
     <div class="w-full overflow-x-auto">
-      <table class="m-0 min-w-[960px] text-sm">
+      <table class="m-0 min-w-[1080px] text-sm">
         <thead class="bg-muted/50">
           <tr>
             <th class="w-32 text-left">单词</th>
             <th class="w-36 text-left">音标</th>
-            <th class="w-40 text-left">中文对照发音</th>
+            <th class="w-36 text-left">纯中文读法</th>
+            <th class="w-40 text-left">辅助读法</th>
             <th class="w-32 text-left">中文含义</th>
             <th class="w-40 text-left">常见误读</th>
             <th class="text-left">说明 / 例句</th>
@@ -67,7 +68,7 @@ const categories = Array.from(new Set(terms.map(term => term.category)));
               <tr
                 data-pronunciation-row
                 data-category={term.category}
-                data-search={`${term.term} ${term.ipa} ${term.zhPronunciation} ${term.meaningZh} ${term.commonMistake}`.toLowerCase()}
+                data-search={`${term.term} ${term.ipa} ${term.zhPronunciation} ${term.zhPurePronunciation} ${term.meaningZh} ${term.commonMistake}`.toLowerCase()}
               >
                 <td>
                   <button
@@ -89,6 +90,7 @@ const categories = Array.from(new Set(terms.map(term => term.category)));
                     {term.ipa}
                   </button>
                 </td>
+                <td class="font-semibold text-accent">{term.zhPurePronunciation}</td>
                 <td class="font-semibold">{term.zhPronunciation}</td>
                 <td>{term.meaningZh}</td>
                 <td>{term.commonMistake}</td>
