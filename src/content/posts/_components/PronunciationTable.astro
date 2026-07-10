@@ -1,0 +1,185 @@
+---
+import type { PronunciationTerm } from "../_data/pronunciationTerms";
+
+type Props = {
+  terms: readonly PronunciationTerm[];
+};
+
+const { terms } = Astro.props;
+const categories = Array.from(new Set(terms.map(term => term.category)));
+---
+
+<section class="not-prose my-8" aria-label="开发者英文发音词表">
+  <div class="mb-4 grid gap-3 sm:grid-cols-[1fr_auto]">
+    <label class="block">
+      <span class="mb-1 block text-sm font-medium text-foreground">搜索</span>
+      <input
+        data-pronunciation-search
+        class="border-border bg-background text-foreground focus-visible:outline-accent w-full rounded border px-3 py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dashed"
+        type="search"
+        placeholder="搜索单词、中文含义、中文读法或常见误读"
+      />
+    </label>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-medium text-foreground">分类</span>
+      <select
+        data-pronunciation-category
+        class="border-border bg-background text-foreground focus-visible:outline-accent w-full rounded border px-3 py-2 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dashed sm:w-40"
+      >
+        <option value="">全部</option>
+        {categories.map(category => <option value={category}>{category}</option>)}
+      </select>
+    </label>
+  </div>
+
+  <p
+    data-pronunciation-fallback
+    class="bg-muted text-muted-foreground mb-3 hidden rounded px-3 py-2 text-sm"
+  >
+    当前浏览器不支持语音朗读，你仍然可以参考音标和中文对照发音。
+  </p>
+
+  <p
+    data-pronunciation-empty
+    class="bg-muted text-muted-foreground mb-3 hidden rounded px-3 py-2 text-sm"
+  >
+    没有匹配的单词，换个关键词试试。
+  </p>
+
+  <div class="border-border overflow-hidden rounded border">
+    <div class="w-full overflow-x-auto">
+      <table class="m-0 min-w-[960px] text-sm">
+        <thead class="bg-muted/50">
+          <tr>
+            <th class="w-32 text-left">单词</th>
+            <th class="w-36 text-left">音标</th>
+            <th class="w-40 text-left">中文对照发音</th>
+            <th class="w-32 text-left">中文含义</th>
+            <th class="w-40 text-left">常见误读</th>
+            <th class="text-left">说明 / 例句</th>
+            <th class="w-24 text-left">发音</th>
+          </tr>
+        </thead>
+        <tbody data-pronunciation-body>
+          {
+            terms.map(term => (
+              <tr
+                data-pronunciation-row
+                data-category={term.category}
+                data-search={`${term.term} ${term.ipa} ${term.zhPronunciation} ${term.meaningZh} ${term.commonMistake}`.toLowerCase()}
+              >
+                <td>
+                  <button
+                    type="button"
+                    class="text-accent focus-visible:outline-accent rounded underline decoration-dashed underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dashed"
+                    data-speak={term.speakText ?? term.term}
+                    aria-label={`朗读 ${term.term}`}
+                  >
+                    {term.term}
+                  </button>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="text-foreground focus-visible:outline-accent rounded font-mono underline decoration-dotted underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dashed"
+                    data-speak={term.speakText ?? term.term}
+                    aria-label={`朗读 ${term.term}，音标 ${term.ipa}`}
+                  >
+                    {term.ipa}
+                  </button>
+                </td>
+                <td class="font-semibold">{term.zhPronunciation}</td>
+                <td>{term.meaningZh}</td>
+                <td>{term.commonMistake}</td>
+                <td>
+                  <div>{term.note}</div>
+                  <div class="text-muted-foreground mt-1">{term.example}</div>
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="border-border hover:bg-muted focus-visible:outline-accent rounded border px-2 py-1 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dashed"
+                    data-speak={term.speakText ?? term.term}
+                    aria-label={`朗读 ${term.term}`}
+                  >
+                    Listen
+                  </button>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script>
+  const searchInput = document.querySelector<HTMLInputElement>(
+    "[data-pronunciation-search]"
+  );
+  const categorySelect = document.querySelector<HTMLSelectElement>(
+    "[data-pronunciation-category]"
+  );
+  const fallback = document.querySelector<HTMLElement>(
+    "[data-pronunciation-fallback]"
+  );
+  const emptyState = document.querySelector<HTMLElement>(
+    "[data-pronunciation-empty]"
+  );
+  const rows = Array.from(
+    document.querySelectorAll<HTMLTableRowElement>("[data-pronunciation-row]")
+  );
+  const speakButtons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>("[data-speak]")
+  );
+
+  const canSpeak =
+    "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+
+  if (!canSpeak) {
+    fallback?.classList.remove("hidden");
+    speakButtons.forEach(button => {
+      button.disabled = true;
+      button.classList.add("cursor-not-allowed", "opacity-60");
+    });
+  }
+
+  function applyFilters() {
+    const query = searchInput?.value.trim().toLowerCase() ?? "";
+    const category = categorySelect?.value ?? "";
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+      const matchesQuery = row.dataset.search?.includes(query) ?? true;
+      const matchesCategory = !category || row.dataset.category === category;
+      const isVisible = matchesQuery && matchesCategory;
+
+      row.hidden = !isVisible;
+      if (isVisible) visibleCount += 1;
+    });
+
+    emptyState?.classList.toggle("hidden", visibleCount > 0);
+  }
+
+  function speak(text: string) {
+    if (!canSpeak) return;
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "en-US";
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  searchInput?.addEventListener("input", applyFilters);
+  categorySelect?.addEventListener("change", applyFilters);
+
+  speakButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      const text = button.dataset.speak;
+      if (text) speak(text);
+    });
+  });
+</script>

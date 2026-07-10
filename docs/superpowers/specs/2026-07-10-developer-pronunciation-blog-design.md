@@ -78,7 +78,7 @@ Each pronunciation row should include:
 
 The Chinese approximation is required for every row. It should be practical and easy to read, while the article clearly says it is only a learning aid. Do not force every sound into Chinese characters when that would mislead the reader. Mixed notation is allowed and preferred for sounds that Chinese characters represent poorly, such as `th`, `ki`, `kee`, and unstressed `uh`.
 
-Example: `schema` should use `/ˈskiː.mə/` with a Chinese-friendly approximation like `斯 kee-ma`, not `斯基-ma` or `斯给-ma`. The note should explain that `sch` is pronounced `/sk/` here and `ee` is the long `/iː/` sound.
+Example: `schema` should use `/ˈskiː.mə/` with a Chinese-friendly approximation like `斯 kee-muh`, not `斯基-ma` or `斯给-ma`. The note should explain that `sch` is pronounced `/sk/` here and `ee` is the long `/iː/` sound.
 
 ## Interaction Design
 

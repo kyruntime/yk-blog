@@ -1,0 +1,59 @@
+---
+title: "Java / Python / Vue 开发者常见英文发音词表"
+description: "给中文母语开发者准备的技术英文发音速查表：包含音标、中文对照发音、常见误读，并支持点击单词或音标朗读。"
+pubDatetime: 2026-07-10T00:00:00.000Z
+featured: true
+tags:
+  - 英语
+  - Java
+  - Python
+  - Vue
+---
+
+import PronunciationTable from "./_components/PronunciationTable.astro";
+import { pronunciationTerms } from "./_data/pronunciationTerms";
+
+写代码时，英文单词不一定要读得像播音员，但在会议、面试、技术分享里，至少要让别人听懂你在说哪个概念。
+
+这篇不是系统英语课，而是一张面向开发者的发音速查表。你可以先看中文对照发音建立感觉，再用音标和点击朗读校准。
+
+---
+
+## 怎么用这张表
+
+- 点英文单词、音标或 `Listen` 按钮，都可以朗读同一个英文词。
+- 中文对照发音只是拐杖，不是标准答案。
+- 遇到中文容易误导的音，我会混用 `kee`、`th`、`uh` 这类提示。
+- 比如 `schema` 是 `/ˈskiː.mə/`，更适合记成 **斯 kee-muh**，不是“斯基马”。
+
+## 常见坑
+
+### 不要按拼音读缩写
+
+`JVM`、`SQL`、`API` 这类词经常按英文字母名读。`Vue` 不是 `V-U-E`，它和 `view` 同音。
+
+### 中文近似有时会害人
+
+如果把 `schema` 写成“斯基-ma”，中文读者很容易读成 `si ji ma`。所以这张表会优先避免误导，必要时用中英混写。
+
+### 长短元音要分清
+
+`schema` 里的 `kee` 是长 `/iː/`。`ship` 和 `sheep`、`bit` 和 `beat` 这类差异，在技术词里也会出现。
+
+### 有些技术词有团队习惯
+
+`SQL` 可以读作 `sequel`，也可以逐字母读 `S-Q-L`；`router` 在不同地区也有不同读法。遇到这类词，和团队保持一致比争一个唯一答案更重要。
+
+## 发音词表
+
+<PronunciationTable terms={pronunciationTerms} />
+
+## 练习句
+
+- The async task is queued.
+- The schema migration failed.
+- I will update the cache layer.
+- We use Vue on the frontend and Python on the backend.
+- The service runs on the JVM.
+- The SQL query needs an index.
+- nginx forwards traffic to the app.
